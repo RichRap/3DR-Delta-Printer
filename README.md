@@ -16,7 +16,10 @@ Attribution - ShareAlike Creative Commons V3 (CC BY-SA 3.0) - http://creativecom
 This License is not greatly restrictive at all, so please don't forget to attribute my work and acknowledge the work by others that this is built on.
 
 Many people and projects have provided inspiration for this printer design. I would like to thank everyone working on RepRap projects the world over. 
-Special thanks to - Johann C. Rocholl for all the great work on Delta printers and firmware. 
+Special thanks to - 
+
+Johann C. Rocholl for all the great work on Delta printers and firmware. 
+
 Sublime for the fantastic Tantillus printer using Spectra fishing line as the drive component and the various other great parts and designs used in the construction of this Printer.
 
 I hope this work has been of some use to you, if you wish to say hello or donate towards further developments please see my Blog here - www.richrap.blogspot.com
@@ -24,12 +27,13 @@ I hope this work has been of some use to you, if you wish to say hello or donate
 Many thanks - Richard Horne (RichRap)
 
 My website - www.richrap.com
+
 Catch me on Twitter @RichRap3D
+
 Watch me on YouTube - http://www.youtube.com/user/RichRap2011
 
 Please see www.reprap.org for information about the RepRap Project.
 Please visit the RepRap forum - http://forums.reprap.org/
-Further assembly, sourcing and pictorial information will become available on www.richrap.com and www.richrap.blogspot.com
 
 Many thanks,
 
@@ -46,9 +50,4 @@ http://richrap.github.io/3DR-Delta-Printer/
 
 ##### Instructions
 
-Print with Hexagon Infill and stop at whatever height you like before the top prints 
-Giving you a nice little house for bees.
-
-Experiment with different levels of infill but around 8% to 20% seem to give a good size.
-
-You can print many and at different heights, their is a middle section and you could print ones to go all around it.
+Assembly guides, sourcing and pictorial information will become available on www.richrap.com and www.richrap.blogspot.com
