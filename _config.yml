@@ -7,7 +7,7 @@
 ## Uses distinct namespace. Jekyll settings should go at the root level.
 githubiverse:
     ## Metadata
-    title: "RepRap 3DR Delta 3D Printer - Designed by RichRap"
+    title: "RepRap 3DR Delta 3D Printer - "
     author: RichRap
     license: Creative Commons - CC-BY-SA-3.0 License
     tags: [RepRap, Printer, Delta, RichRap, Design, Machine]
@@ -25,7 +25,7 @@ githubiverse:
     src_dir: src
 
     ## The headline image
-    lead_image: Little_test_bee_box_stack.jpg
+    lead_image: _RichRap_3DR_British_V2_Crispy.jpg
     show_lead_image: true
 
     ## Optional. When uncommented appends the content of the file defined here to the project description.  Any text in index.md, after the yaml header, will be shown first.
