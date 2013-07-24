@@ -1,0 +1,422 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Githubiverse: {{ site.githubiverse.title }} by {{ site.githubiverse.author }}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon" />
+    
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="css/lightbox/lightbox.css" rel="stylesheet" />
+    <link href="css/githubiverse/default.css" rel="stylesheet" media="screen" type="text/css">
+
+  </head>
+  <body>
+    {% if site.githubiverse.show_forkme_ribbon %}
+      <a href="{{site.githubiverse.github.base}}{{site.githubiverse.github.user}}/{{site.githubiverse.github.repository}}"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    {% endif %}
+
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+
+          {% include header.html %}
+
+          <div class="page-header">
+            <h1 id="title">{{ site.githubiverse.title }}<small> by {{ site.githubiverse.author }}</small></h1>
+          </div>
+          
+          <div class="row-fluid">
+            <div class="span6">
+
+              <div id="lead-image-container"></div>
+
+              <ul id='thumbnails' class='thumbnails'></ul>
+
+
+              <h3>Sources</h3>
+              <div id="sources-section">
+                <div class="row-fluid">
+                  <div class="span9">
+                    <ul id="sources" class="nav nav-tabs nav-stacked"></ul>
+                  </div>
+                  <div class="span3">
+                    <ul id="sourcedownloads" class="nav nav-tabs nav-stacked"></ul>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="span6">
+              
+              <div id="description">
+                {{ content }}
+              </div>
+
+              <div class="meta row-fluid">
+                <div class="span12">
+                  <div id="tags">
+                    <i class="icon-tags" title="tags"></i>&nbsp;
+                    {% for tag in site.githubiverse.tags %}
+                      <a href="#" class="tag"><span class="label">{{ tag }}</span></a>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <div class="meta row-fluid">
+                <div class="span6">
+                  <div id="home"><i class='icon-home' title="Repository"></i>&nbsp;<a href="{{ site.githubiverse.github.base }}{{site.githubiverse.github.user}}/{{ site.githubiverse.github.repository }}">{{ site.githubiverse.github.repository }}</a></div>
+                </div>
+
+                <div class="span6">
+                  <div id="author"><i class='icon-user' title="User"></i>&nbsp;<a href="{{ site.githubiverse.github.base }}{{ site.githubiverse.github.user }}">{{ site.githubiverse.github.user }}</a></div>
+                </div>
+              </div>
+
+              <div class="meta row-fluid">
+                <div class="span6">
+                  <div id="license"><i class='icon-file' title="License"></i>&nbsp;{{ site.githubiverse.license }}</div>
+                </div>
+                <div class="span6">
+                  <div id="download-all"><i class='icon-download' title="Download Project"></i>&nbsp;<a href="{{ site.githubiverse.github.base }}{{ site.githubiverse.github.user }}/{{ site.githubiverse.github.repository }}/zipball/{{ site.githubiverse.github.branch }}">Download Project as Zip</a></div>
+                </div>
+              </div>
+
+              <div class="meta row-fluid">
+                <div class="span6">
+                  <div id="created"><i class='icon-play-circle' title="Created"></i>&nbsp;Created: </div>
+                </div>
+                <div class="span6">
+                  <div id="updated"><i class='icon-refresh' title="Updated"></i>&nbsp;Updated: </div>
+                </div>
+              </div>              
+
+              <h3>STLs</h3>
+              <div id="stlviewer"></div>
+              <div id="stls-section">
+                <div class="row-fluid">
+                  <div class="span9">
+                    <ul id="stls" class="nav nav-tabs nav-stacked"></ul>
+                  </div>
+                  <div class="span3">
+                    <ul id="stldownloads" class="nav nav-tabs nav-stacked"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% include footer.html %}
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Javascript -->
+
+    <script src="http://code.jquery.com/jquery-1.8.1.min.js"> </script>
+    <script src="js/humane.min.js"></script>
+    <script src="js/showdown.min.js"></script>
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="js/lightbox/lightbox.min.js"></script>
+    <script src="js/thingiview/Three.js"></script>
+    <script src="js/thingiview/plane.js"></script>
+    <script src="js/thingiview/Base64Binary.js"></script>
+    <script src="js/thingiview/thingiview.js"></script>
+    <script src="js/underscore/underscore.min.js"></script>
+    <script src="js/github/gh3.min.js"></script>
+    
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script>
+      $(document).ready(function(){
+        autoloadSTL = {{ site.githubiverse.autoload_stl }};
+        leadImageName = '{{ site.githubiverse.lead_image }}';
+        showLeadImage = {{ site.githubiverse.show_lead_image }};
+        thingiurlbase = "js/thingiview";
+        thingiview = new Thingiview("stlviewer");
+        thingiview.setObjectColor('#C0D8F0');
+        thingiview.setBackgroundColor('#ffffff');
+        thingiview.initScene();
+
+        $('.stlfile').live('click', function(e){
+          loadStlString($(this).data('githubFile'));
+        });
+
+        var githubUser = new Gh3.User("{{site.githubiverse.github.user}}"),
+            githubRepositories = new Gh3.Repositories(githubUser),
+            stlFileCount = 0,
+            srcFileCount = 0;
+
+        function noSTLs() {
+          $('#stls-section').html('No STL Files Found.');
+        }
+
+        function noSources() {
+          $('#sources-section').html('No Source Files Found.');
+        }
+
+        function addSourceDir(dir, dirname){
+          dir.fetchContents(function (err, res) {
+            if(err) { throw "Error fetching contents for sources." }
+
+            if (dirname == ''){
+              dirname = dir.name; 
+            } else {
+              dirname = dirname+'/'+dir.name;
+            }
+                
+            dir.eachContent(function (content) {
+              if (content.type == 'file'){
+                addSourceFile(content, dirname);
+              } else if (content.type == 'dir'){
+                addSourceDir(content, dirname);
+              }
+            });
+          });
+        }
+
+        function addSourceFile(content,dirname){
+          srcFileCount++;
+          if (dirname != ''){
+            dirname = dirname+'/';
+          }
+
+          var fileGithubUrl = githubRepo.html_url + '/blob/' + content.branchName + '/' + content.path;
+          var rawFileURL = githubRepo.html_url + '/raw/' + content.branchName + '/' + content.path;
+          $('#sources').append("<li><a href='" + fileGithubUrl + "' target='_githubiverse' title='View in Github' class=\"srcfile\">"+ dirname + content.name + "</a></li>");
+          $('#sourcedownloads').append("<li><a class='btn-small btn-inverse' href='" + rawFileURL + "' download='" + content.name + "'><i class='icon-download-alt icon-white'></i>&nbsp;Download</a></li>");
+        }
+
+        function addSTLDir(dir, dirname){
+          dir.fetchContents(function (err, res) {
+            if(err) { throw "Error fetching contents for stls." }
+
+            if (dirname == ''){
+              dirname = dir.name; 
+            } else {
+              dirname = dirname+'/'+dir.name;
+            }
+                
+            dir.eachContent(function (content) {
+              if (content.type == 'file'){
+                addSTLFile(content, dirname);
+              } else if (content.type == 'dir'){
+                addSTLDir(content, dirname);
+              }
+            });
+          });
+        }
+
+
+        function addSTLFile(content,dirname){
+          if (! /\.stl$/i.test(content.name)) {
+            return
+          }
+          stlFileCount++;
+          if (dirname != ''){
+            dirname = dirname+'/';
+          }
+
+          var rawFileURL = githubRepo.html_url + '/raw/' + content.branchName + '/' + content.path;
+          $('#stls').append("<li><a href=\"javascript://\" title='Preview' class=\"stlfile\">"+ dirname + content.name+"</a></li>")
+          $('.stlfile').last().data("githubFile",content);
+          $('#stldownloads').append("<li><a class='btn-small btn-inverse' href='" +  rawFileURL + "' download='" + content.name + "'><i class='icon-download-alt icon-white'></i>&nbsp;Download</a></li>");
+        }
+
+        function loadStlString(githubFile){
+          if (githubFile == undefined || githubFile == '') return;
+          
+          thingiview.progressBarMessage('Retrieving File Data');
+
+          githubFile.fetchContent(function (err, res) {
+            if(err) { throw "Error retrieving github file contents." }
+
+            var stlString = githubFile.getRawContent();
+
+            if (stlString.match(/^solid/)){
+              thingiview.loadSTLString(stlString);
+            } else {
+              var uintArray = Base64Binary.decode(githubFile.content);
+              thingiview.loadSTLBinary(String.fromCharCode.apply(null, new Uint16Array(uintArray)));
+            }
+            
+          });
+        }
+
+        function showImages(imgDir){
+          if (imgDir != undefined){
+            imgDir.fetchContents(function (err, res) {
+              if(err) { throw "Error fetching contents for images." }
+              imgDir.eachContent(function (content) {
+                if (content.type == 'file'){
+                  var rawFileURL = githubRepo.html_url + '/raw/' + content.branchName + '/' + content.path;
+
+                  if (showLeadImage && content.name == leadImageName){
+                    $('#lead-image-container').append("<a class='thumbnail' href='" + rawFileURL + "' rel='lightbox[githubiverse]'><img class='lead-image' src='" + rawFileURL + "' alt='" + content.name + "' title='" + content.name + "' /></a>");
+                  } else {
+                    $('#thumbnails').append("<li><a class='thumbnail' href='" + rawFileURL + "' rel='lightbox[githubiverse]'><img class='imgfile' src='" + rawFileURL + "' alt='" + content.name + "' title='" + content.name + "' /></a></li>");
+                  }
+                }
+              });
+            });
+          }
+        }
+
+        function showSources(srcDir){
+          if (srcDir == undefined) {
+            noSources();
+            return;
+          }
+          srcDir.fetchContents(function (err, res) {
+            if(err) { throw "Error fetching contents for sources." }
+            srcDir.eachContent(function (content) {
+              if (content.type == 'file'){
+                addSourceFile(content, '');
+              } else if (content.type == 'dir'){
+                addSourceDir(content, '');
+              }
+            });
+
+            if (srcFileCount == 0){
+              noSources();
+            }
+          });
+        }
+
+        function showSTLs(stlDir){
+          if (stlDir == undefined){
+            noStls();
+            return;
+          } 
+          stlDir.fetchContents(function (err, res) {
+            if(err) { throw "Error fetching contents for stls." }
+
+            stlDir.eachContent(function (content) {
+                if (content.type == 'file'){
+                  addSTLFile(content, '');
+                } else if (content.type == 'dir'){
+                  addSTLDir(content, '');
+                }
+            });
+
+            if (stlFileCount > 0){
+              if (autoloadSTL && $('.stlfile').first().text() != "") {
+                if ($('.stlfile').first().data('githubFile') != undefined){
+                  loadStlString($('.stlfile').first().data('githubFile'));  
+                }                      
+              }  
+            } else {
+              noStls();
+            }
+          });
+        }
+
+        function getDirRecursive(path, parentDir,callback) {
+
+          parentDir.fetchContents(function (err, res) {
+            if(err) { throw "Error fetching contents for images." }
+
+            if (path.indexOf("/") == -1){
+              callback(parentDir.getDirByName(path));
+              return
+            }
+
+            var nextDirName = path.substring(0, path.indexOf("/"));
+            var currentDir = parentDir.getDirByName(nextDirName);
+            var remainingPath = path.substring(path.indexOf("/")+1);
+
+            return getDirRecursive(remainingPath, currentDir,callback);
+          });        
+        }
+
+        function processDirectories(path, callback){
+          
+          if (path.indexOf("/") == -1){
+            var dir = master.getDirByName(path)
+            if (dir == undefined){
+              console.error("Unable to find directory in branch: ", path);
+              callback(null);
+              return false
+            }
+            callback(dir);
+          } else {
+            var nextDirName = path.substring(0, path.indexOf("/"));
+            var nextDir = master.getDirByName(nextDirName);
+            if (nextDir == undefined){
+              console.error("Unable to find directory in branch: ", nextDir);
+              callback(null);
+              return false
+            }
+            var remainingPath = path.substring(path.indexOf("/")+1);
+            getDirRecursive(remainingPath, nextDir, callback);
+          }
+        }
+
+        githubRepositories.fetch({page:1, per_page:100, direction : "desc"},"next", function (err, res) {
+          if(err) { throw "Error fetching github repositories." }
+        });
+
+        githubRepo = new Gh3.Repository("{{site.githubiverse.github.repository}}", githubUser);
+        githubRepo.fetch(function (err, res) {
+          if(err) { throw "Error fetching github repository." }
+
+          githubRepo.fetchBranches(function (err, res) {
+            if(err) { throw "Error fetching github branches." }
+
+            master = githubRepo.getBranchByName("{{site.githubiverse.github.branch}}");
+
+            master.fetchContents(function (err, res) {
+              if(err) { throw "Error fetching github repository contents." }
+
+              processDirectories('{{ site.githubiverse.src_dir }}', showSources);
+              processDirectories('{{ site.githubiverse.img_dir }}', showImages);
+              processDirectories('{{ site.githubiverse.stl_dir }}', showSTLs);
+
+              $('#updated').append("&nbsp;"+humaneDate(githubRepo.pushed_at));
+              $('#updated').attr('title', (new Date(githubRepo.pushed_at)).toLocaleString());
+              $('#created').append("&nbsp;"+humaneDate(githubRepo.created_at));
+              $('#created').attr('title', (new Date(githubRepo.created_at)).toLocaleString());
+
+              {% if site.githubiverse.description_file %}
+                
+                var descriptionFile = master.getFileByName('{{site.githubiverse.description_file}}');
+
+                descriptionFile.fetchContent(function (err, res) {
+                  if(err) { throw "Error retrieving github description file." }
+
+                  var descriptionText = "";
+
+                  if ((/.*\.md$/).test(descriptionFile.name) || (/.*\.markdown$/).test(descriptionFile.name)){
+                    var converter = new Showdown.converter();
+                    descriptionText = converter.makeHtml(descriptionFile.getRawContent());  
+                  } else {
+                    descriptionText = descriptionFile.getRawContent();
+                  }                  
+
+                  if ($('#description').html().trim() == ''){
+                    $('#description').html(descriptionText);  
+                  } else {
+                    $('#description').html($('#description').html() + "<br>"  + descriptionText);
+                  }
+                  
+                  
+                });
+                
+              {% endif %}
+
+            });
+
+          })
+        });
+
+
+      });
+
+    </script>
+  </body>
+</html>
