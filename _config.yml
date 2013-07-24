@@ -7,7 +7,7 @@
 ## Uses distinct namespace. Jekyll settings should go at the root level.
 githubiverse:
     ## Metadata
-    title: "RepRap 3DR Delta 3D Printer - "
+    title: "RepRap 3DR Delta 3D Printer"
     author: RichRap
     license: Creative Commons - CC-BY-SA-3.0 License
     tags: [RepRap, Printer, Delta, RichRap, Design, Machine]
