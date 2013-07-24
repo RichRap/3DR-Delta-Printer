@@ -7,16 +7,16 @@
 ## Uses distinct namespace. Jekyll settings should go at the root level.
 githubiverse:
     ## Metadata
-    title: "A small printed house for solitary bees"
+    title: "RepRap 3DR Delta 3D Printer - Designed by RichRap"
     author: RichRap
-    license: GPL3
-    tags: [Garden, Bee, House]
+    license: Creative Commons - CC-BY-SA-3.0 License
+    tags: [RepRap, Printer, Delta, RichRap, Design, Machine]
 
     ## Github project parameters.
     github:
         base: https://github.com/
         user: richrap
-        repository: Bee_House_Design
+        repository: 3DR-Delta-Printer
         branch: master
 
     ## The names of directories where any images, source and stl files associated with the project can be found.
